@@ -1,88 +1,50 @@
-import { Filter, Plus, Search, UserRoundCheck, UserRoundX } from 'lucide-react';
-import { StatusBadge, StatCard } from '@/components/shared';
+type Tone = 'brand' | 'slate' | 'emerald' | 'amber' | 'success' | 'warning' | 'neutral';
 
-const users = [
-  { id: 'USR-1042', name: 'Amina Idris', role: 'Operations Lead', company: 'North Ridge Holdings', status: 'Active', lastLogin: '2h ago' },
-  { id: 'USR-1187', name: 'Nabil Saleh', role: 'Project Manager', company: 'Summit Realty', status: 'Inactive', lastLogin: '4d ago' },
-  { id: 'USR-2048', name: 'Celine Haddad', role: 'Finance Admin', company: 'Aster Logistics', status: 'Active', lastLogin: '12h ago' },
-  { id: 'USR-2309', name: 'Yassine Rami', role: 'Security Lead', company: 'Blue Harbor Group', status: 'Pending', lastLogin: '1d ago' },
-];
+const statToneClasses: Record<Extract<Tone, 'brand' | 'slate' | 'emerald' | 'amber'>, string> = {
+  brand: 'bg-brand-50 text-brand-700',
+  slate: 'bg-slate-100 text-slate-700',
+  emerald: 'bg-emerald-50 text-emerald-700',
+  amber: 'bg-amber-50 text-amber-700',
+};
 
-export default function UserManagementPage() {
+const statusToneClasses: Record<Extract<Tone, 'success' | 'warning' | 'brand' | 'neutral'>, string> = {
+  success: 'bg-emerald-50 text-emerald-700',
+  warning: 'bg-amber-50 text-amber-700',
+  brand: 'bg-brand-50 text-brand-700',
+  neutral: 'bg-slate-100 text-slate-600',
+};
+
+export function StatCard({
+  label,
+  value,
+  change,
+  tone,
+}: {
+  label: string;
+  value: string;
+  change: string;
+  tone: 'brand' | 'slate' | 'emerald' | 'amber';
+}) {
   return (
-    <main className="min-h-screen bg-slate-100 p-6">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">User management</p>
-            <h1 className="mt-2 text-4xl font-black tracking-tight text-slate-900">Users & access control</h1>
-          </div>
-          <button className="inline-flex items-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white">
-            <Plus className="h-4 w-4" /> Add user
-          </button>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <StatCard label="Total users" value="1,286" change="+8.4%" tone="brand" />
-          <StatCard label="Active" value="1,089" change="+7.6%" tone="emerald" />
-          <StatCard label="Pending" value="118" change="+3.1%" tone="amber" />
-          <StatCard label="Inactive" value="79" change="-1.9%" tone="slate" />
-        </div>
-
-        <div className="mt-6 card overflow-hidden">
-          <div className="flex flex-col gap-4 border-b border-slate-200 p-5 md:flex-row md:items-center md:justify-between">
-            <div className="relative w-full max-w-md">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <input placeholder="Search user, role or company" className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-brand-400 focus:bg-white" />
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700">
-                <Filter className="h-4 w-4" /> Filters
-              </button>
-              <button className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700">
-                <UserRoundCheck className="h-4 w-4" /> Active only
-              </button>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-left">
-              <thead className="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500">
-                <tr>
-                  <th className="px-5 py-3">User</th>
-                  <th className="px-5 py-3">Role</th>
-                  <th className="px-5 py-3">Company</th>
-                  <th className="px-5 py-3">Status</th>
-                  <th className="px-5 py-3">Last login</th>
-                  <th className="px-5 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id} className="border-t border-slate-200 text-sm text-slate-700">
-                    <td className="px-5 py-4">
-                      <div className="font-medium text-slate-900">{user.name}</div>
-                      <div className="text-xs text-slate-500">{user.id}</div>
-                    </td>
-                    <td className="px-5 py-4">{user.role}</td>
-                    <td className="px-5 py-4">{user.company}</td>
-                    <td className="px-5 py-4"><StatusBadge label={user.status} tone={user.status === 'Active' ? 'success' : user.status === 'Pending' ? 'warning' : 'brand'} /></td>
-                    <td className="px-5 py-4">{user.lastLogin}</td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        <button className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-medium text-slate-700">Edit</button>
-                        <button className="text-xs font-medium text-brand-700">Reset</button>
-                        {user.status === 'Active' ? <UserRoundX className="h-4 w-4 text-slate-500" /> : <UserRoundCheck className="h-4 w-4 text-emerald-600" />}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <div className="card p-5">
+      <div className="flex items-center justify-between">
+        <div className="text-sm font-medium text-slate-500">{label}</div>
+        <div className={`rounded-full px-2 py-1 text-[11px] font-semibold ${statToneClasses[tone]}`}>{change}</div>
       </div>
-    </main>
+      <div className="mt-5 text-3xl font-black tracking-tight text-slate-900">{value}</div>
+    </div>
+  );
+}
+
+export function StatusBadge({ label, tone }: { label: string; tone: 'success' | 'warning' | 'brand' | 'neutral' }) {
+  return <span className={`status-pill ${statusToneClasses[tone]}`}>{label}</span>;
+}
+
+export function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-700">{eyebrow}</p>
+      <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">{title}</h2>
+    </div>
   );
 }
