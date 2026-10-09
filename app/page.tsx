@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   ChevronRight,
   Globe,
-  Lock,
   ShieldCheck,
   Sparkles,
   TrendingUp,
